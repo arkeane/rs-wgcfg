@@ -44,7 +44,7 @@ pub struct PeerConf {
 impl PeerConf {
     pub fn new(
         name: String,
-        server_cfg: ServerConf,
+        server_cfg: &ServerConf,
         dns_primary: Ipv4Addr,
         dns_secondary: Ipv4Addr,
         allowed_ips: Ipv4Addr,
@@ -56,7 +56,7 @@ impl PeerConf {
         let priv_key = PrivKey::new(OsRng);
         let pub_key = PubKey::from(&priv_key);
         let shared_key = PrivKey::new(OsRng);
-        let server_pub_key = server_cfg.pub_key;
+        let server_pub_key = server_cfg.pub_key.clone();
         PeerConf {
             name,
             priv_key,
@@ -73,12 +73,12 @@ impl PeerConf {
         }
     }
 
-    pub fn interactive_new(server_cfg: ServerConf) -> PeerConf {
+    pub fn interactive_new(server_cfg: &ServerConf) -> PeerConf {
         println!("--------------------------------------------------");
         println!("Configure Peer: ");
         let mut rng = rand::thread_rng();
         let name = Text::new("Insert peer name").prompt().unwrap();
-        let endpoint = CustomType::<Ipv4Addr>::new("Insert Enpoint IpV4 Address")
+        let endpoint = CustomType::<Ipv4Addr>::new("Insert Endpoint IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
             .prompt()
@@ -90,13 +90,13 @@ impl PeerConf {
             .prompt()
             .unwrap();
         let allowed_ips = CustomType::<Ipv4Addr>::new("Insert Allowed IPs")
-            .with_formatter(&|i| format!("{}", i))
+            .with_formatter(&|i| format!("{}/0", i))
             .with_error_message("Please insert a valid IP")
             .with_default(Ipv4Addr::new(0, 0, 0, 0))
             .prompt()
             .unwrap();
         let address = CustomType::<Ipv4Addr>::new("Insert Peer Address")
-            .with_formatter(&|i| format!("{}", i))
+            .with_formatter(&|i| format!("{}/32", i))
             .with_error_message("Please insert a valid IP")
             .with_default(Ipv4Addr::new(10, 0, 0, rng.gen_range(1..128)))
             .prompt()
