@@ -22,9 +22,9 @@ use crate::gen_keys::*;
 use crate::server_conf::*;
 
 use inquire::*;
+use rand::Rng;
 use rand_core::OsRng;
 use std::net::Ipv4Addr;
-use rand::Rng;
 
 pub struct PeerConf {
     pub name: String,
@@ -73,7 +73,7 @@ impl PeerConf {
         }
     }
 
-    pub fn interactive_new(server_cfg: ServerConf) -> PeerConf{
+    pub fn interactive_new(server_cfg: ServerConf) -> PeerConf {
         println!("--------------------------------------------------");
         println!("Configure Peer: ");
         let mut rng = rand::thread_rng();
@@ -81,39 +81,56 @@ impl PeerConf {
         let endpoint = CustomType::<Ipv4Addr>::new("Insert Enpoint IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .prompt().unwrap();
+            .prompt()
+            .unwrap();
         let port = CustomType::<i32>::new("Insert port number")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("please insert an integer number")
             .with_default(WG_SERVER_PORT)
-            .prompt().unwrap();
+            .prompt()
+            .unwrap();
         let allowed_ips = CustomType::<Ipv4Addr>::new("Insert Allowed IPs")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(0,0,0,0))
-            .prompt().unwrap();
+            .with_default(Ipv4Addr::new(0, 0, 0, 0))
+            .prompt()
+            .unwrap();
         let address = CustomType::<Ipv4Addr>::new("Insert Peer Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(10,0,0,rng.gen_range(1..128)))
-            .prompt().unwrap();
+            .with_default(Ipv4Addr::new(10, 0, 0, rng.gen_range(1..128)))
+            .prompt()
+            .unwrap();
         let dns_primary = CustomType::<Ipv4Addr>::new("Insert primary DNS IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(1,1,1,1))
-            .prompt().unwrap();
+            .with_default(Ipv4Addr::new(1, 1, 1, 1))
+            .prompt()
+            .unwrap();
         let dns_secondary = CustomType::<Ipv4Addr>::new("Insert secondary DNS IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(8,8,8,8))
-            .prompt().unwrap();
+            .with_default(Ipv4Addr::new(8, 8, 8, 8))
+            .prompt()
+            .unwrap();
         let keepalive = CustomType::<i32>::new("Insert PersistentKeepalive time (seconds)")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("please insert an integer number")
             .with_default(25)
-            .prompt().unwrap();
+            .prompt()
+            .unwrap();
         println!("--------------------------------------------------");
 
-        PeerConf::new(name, server_cfg, dns_primary, dns_secondary, allowed_ips, address, endpoint, port, keepalive)
+        PeerConf::new(
+            name,
+            server_cfg,
+            dns_primary,
+            dns_secondary,
+            allowed_ips,
+            address,
+            endpoint,
+            port,
+            keepalive,
+        )
     }
 }

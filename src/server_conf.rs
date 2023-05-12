@@ -12,28 +12,27 @@ static WG_SERVER_PORT: i32 = 51820;
 
 use crate::gen_keys::*;
 
-use rand_core::OsRng;
 use inquire::*;
+use rand_core::OsRng;
 
-pub struct ServerConf{
+pub struct ServerConf {
     pub priv_key: PrivKey,
     pub pub_key: PubKey,
-    pub port: i32
+    pub port: i32,
 }
 
 impl ServerConf {
-    pub fn new(port: i32) -> ServerConf{
+    pub fn new(port: i32) -> ServerConf {
         let priv_key = PrivKey::new(OsRng);
         let pub_key = PubKey::from(&priv_key);
         ServerConf {
             priv_key,
             pub_key,
-            port
+            port,
         }
     }
 
-    pub fn interactive_new() -> ServerConf{
-
+    pub fn interactive_new() -> ServerConf {
         println!("--------------------------------------------------");
         println!("Configure Server: ");
 
@@ -41,9 +40,9 @@ impl ServerConf {
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("please insert an integer number")
             .with_default(WG_SERVER_PORT)
-            .prompt().unwrap();
+            .prompt()
+            .unwrap();
         println!("--------------------------------------------------");
         ServerConf::new(port)
-        
     }
 }

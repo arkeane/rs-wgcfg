@@ -1,6 +1,6 @@
-pub mod server_conf;
 pub mod gen_keys;
 pub mod peer_conf;
+pub mod server_conf;
 
 fn main() {
     let server_cfg = server_conf::ServerConf::interactive_new();

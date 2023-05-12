@@ -8,12 +8,10 @@ Implementation of key pair creation on Curve25519 stripped from https://github.c
 
 */
 
-pub struct PrivKey(
-    pub(crate) [u8; 32]
-);
+pub struct PrivKey(pub(crate) [u8; 32]);
 
 impl PrivKey {
-    pub fn new<T: RngCore + CryptoRng>(mut csrng: T) -> Self{
+    pub fn new<T: RngCore + CryptoRng>(mut csrng: T) -> Self {
         let mut bytes = [0u8; 32];
         csrng.fill_bytes(&mut bytes);
         PrivKey(bytes)
@@ -32,11 +30,9 @@ impl AsRef<[u8]> for PrivKey {
     }
 }
 
-pub struct PubKey(
-    pub(crate) MontgomeryPoint
-);
+pub struct PubKey(pub(crate) MontgomeryPoint);
 
-impl PubKey{
+impl PubKey {
     #[inline]
     pub fn as_bytes(&self) -> &[u8; 32] {
         self.0.as_bytes()
