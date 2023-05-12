@@ -5,6 +5,7 @@ use base64::{engine::general_purpose, Engine as _};
 use std::{fs::File, io::Write};
 
 pub fn save_peer_conf(peer_cfg: &PeerConf) {
+    println!("Saving {}.conf", peer_cfg.name);
     let mut file = File::create(format!("{}.conf", peer_cfg.name)).unwrap();
     let peer_conf = format!("[Interface]\nPrivateKey = {}\nListenPort = {}\nAddress = {}\nDNS = {}, {}\n\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}/0\nEndpoint = {}:{}\nPersistentKeepalive = {}\n",
         general_purpose::STANDARD.encode(&peer_cfg.priv_key),
@@ -24,7 +25,8 @@ pub fn save_peer_conf(peer_cfg: &PeerConf) {
 }
 
 pub fn save_server_conf(server_cfg: &ServerConf){
-    let mut file = File::create(format!("server.conf")).unwrap();
+    println!("Saving {}.conf", server_cfg.interface_name);
+    let mut file = File::create(format!("{}.conf", server_cfg.interface_name)).unwrap();
     let server_conf = format!("[Interface]\nPrivateKey = {}\nListenPort = {}\n\n",
         general_purpose::STANDARD.encode(&server_cfg.priv_key),
         server_cfg.port,
