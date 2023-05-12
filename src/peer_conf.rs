@@ -77,7 +77,10 @@ impl PeerConf {
         println!("--------------------------------------------------");
         println!("Configure Peer: ");
         let mut rng = rand::thread_rng();
-        let name = Text::new("Insert peer name").prompt().unwrap();
+        let name = Text::new("Insert peer name")
+            .with_default("peer")
+            .prompt()
+            .unwrap();
         let endpoint = CustomType::<Ipv4Addr>::new("Insert Endpoint IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")

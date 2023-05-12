@@ -9,13 +9,15 @@ use write_conf::update_server_conf;
 fn main() {
     let server_cfg;
 
-    let interface_name = Text::new("Insert interface name").with_default("wg0").prompt().unwrap();
+    let interface_name = Text::new("Insert interface name")
+        .with_default("wg0")
+        .prompt()
+        .unwrap();
 
     if std::path::Path::new(&format!("{}.conf", interface_name)).exists() {
         println!("{}.conf exists, loading it", interface_name);
         server_cfg = server_conf::load_server_conf(interface_name);
-    }
-    else {
+    } else {
         println!("{}.conf does not exist, creating it", interface_name);
         server_cfg = server_conf::ServerConf::interactive_new();
         write_conf::save_server_conf(&server_cfg);

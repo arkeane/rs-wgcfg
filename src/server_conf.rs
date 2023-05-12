@@ -12,10 +12,10 @@ static WG_SERVER_PORT: i32 = 51820;
 
 use crate::gen_keys::*;
 
+use base64::{engine::general_purpose, Engine as _};
 use inquire::*;
 use rand_core::OsRng;
 use std::{fs::File, io::Read};
-use base64::{engine::general_purpose, Engine as _};
 
 pub struct ServerConf {
     pub interface_name: String,
@@ -49,7 +49,10 @@ impl ServerConf {
     pub fn interactive_new() -> ServerConf {
         println!("--------------------------------------------------");
         println!("Configure Server: ");
-        let interface_name = Text::new("Insert interface name").with_default("wg0").prompt().unwrap();
+        let interface_name = Text::new("Insert interface name")
+            .with_default("wg0")
+            .prompt()
+            .unwrap();
         let port = CustomType::<i32>::new("Insert port number")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("please insert an integer number")
@@ -61,7 +64,7 @@ impl ServerConf {
     }
 }
 
-pub fn load_server_conf(interface: String) -> ServerConf{
+pub fn load_server_conf(interface: String) -> ServerConf {
     let mut file = File::open(format!("{}.conf", interface)).unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
@@ -70,11 +73,15 @@ pub fn load_server_conf(interface: String) -> ServerConf{
     let priv_key_raw = lines.next().unwrap().split(" = ").collect::<Vec<&str>>()[1];
     let port = lines.next().unwrap().split(" = ").collect::<Vec<&str>>()[1];
 
-    let priv_key = PrivKey::from(general_purpose::STANDARD.decode(priv_key_raw.as_bytes()).unwrap());
+    let priv_key = PrivKey::from(
+        general_purpose::STANDARD
+            .decode(priv_key_raw.as_bytes())
+            .unwrap(),
+    );
 
     ServerConf::load(
         String::from(interface),
         port.parse::<i32>().unwrap(),
-        priv_key
+        priv_key,
     )
-} 
+}
