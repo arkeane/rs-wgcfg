@@ -1,13 +1,3 @@
-/*
-
-Generate a server.conf file that looks like this
-
-[Interface]
-PrivateKey = redacted
-ListenPort = 443
-
-*/
-
 static WG_SERVER_PORT: i32 = 51820;
 
 use crate::gen_keys::*;

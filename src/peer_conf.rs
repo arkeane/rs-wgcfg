@@ -1,21 +1,3 @@
-/*
-
-Generate peer.conf file that looks like this
-
-[Interface]
-PrivateKey = redacted
-ListenPort = 443
-Address = 10.0.0.3/32
-DNS = 10.10.10.5, 10.0.0.3
-
-[Peer]
-PublicKey = redacted
-PresharedKey = redacted
-AllowedIPs = 0.0.0.0/0
-Endpoint = 84.33.127.241:443
-PersistentKeepalive = 25
-
-*/
 static WG_SERVER_PORT: i32 = 51820;
 
 use crate::gen_keys::*;
