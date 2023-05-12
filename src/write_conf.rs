@@ -2,12 +2,19 @@ use crate::{peer_conf::*, server_conf::*};
 
 use base64::{engine::general_purpose, Engine as _};
 
-use std::{fs::File, io::Write};
+use std::{fs::{File, OpenOptions, create_dir_all}, io::{Write, Seek}};
 
 pub fn save_peer_conf(peer_cfg: &PeerConf) {
     println!("Saving {}.conf", peer_cfg.name);
-    let mut file = File::create(format!("{}.conf", peer_cfg.name)).unwrap();
-    let peer_conf = format!("[Interface]\nPrivateKey = {}\nListenPort = {}\nAddress = {}\nDNS = {}, {}\n\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}/0\nEndpoint = {}:{}\nPersistentKeepalive = {}\n",
+    create_dir_all("./peers").unwrap();
+    let mut file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(format!("./peers/{}.conf", peer_cfg.name))
+        .unwrap();
+
+    let peer_conf = format!("[Interface]\nPrivateKey = {}\nListenPort = {}\nAddress = {}/32\nDNS = {}, {}\n\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}/0\nEndpoint = {}:{}\nPersistentKeepalive = {}\n",
         general_purpose::STANDARD.encode(&peer_cfg.priv_key),
         peer_cfg.port,
         peer_cfg.address,
@@ -33,4 +40,25 @@ pub fn save_server_conf(server_cfg: &ServerConf){
     );
 
     file.write_all(server_conf.as_bytes()).unwrap();
+}
+
+pub fn update_server_conf(server_cfg: &ServerConf, peer_cfg: &PeerConf){
+    println!("Updating {}.conf", server_cfg.interface_name);
+    let mut file = OpenOptions::new()
+    .read(true)
+    .write(true)
+    .create(true)
+    .open(format!("{}.conf", server_cfg.interface_name))
+    .unwrap();
+
+    let peer_conf = format!("\n\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}/32\nPersistenKeepAlive = {}", 
+        general_purpose::STANDARD.encode(&peer_cfg.pub_key),
+        general_purpose::STANDARD.encode(&peer_cfg.shared_key),
+        peer_cfg.address,
+        peer_cfg.keepalive,
+    );
+
+    file.seek(std::io::SeekFrom::End(0)).unwrap();
+    file.write_all(peer_conf.as_bytes()).unwrap();
+
 }
