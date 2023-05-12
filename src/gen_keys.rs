@@ -23,6 +23,14 @@ impl PrivKey {
     }
 }
 
+impl From<Vec<u8>> for PrivKey {
+    fn from(bytes: Vec<u8>) -> PrivKey {
+        let mut arr = [0u8; 32];
+        arr.copy_from_slice(&bytes[..32]);
+        PrivKey(arr)
+    }
+}
+
 impl AsRef<[u8]> for PrivKey {
     #[inline]
     fn as_ref(&self) -> &[u8] {
@@ -55,5 +63,11 @@ impl AsRef<[u8]> for PubKey {
     #[inline]
     fn as_ref(&self) -> &[u8] {
         self.as_bytes()
+    }
+}
+
+impl Clone for PubKey {
+    fn clone(&self) -> Self {
+        PubKey(self.0)
     }
 }
