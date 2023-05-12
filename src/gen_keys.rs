@@ -4,7 +4,10 @@ use rand_core::RngCore;
 
 /*
 
-Implementation of key pair creation on Curve25519 stripped from https://github.com/dalek-cryptography/x25519-dalek/
+Implementation of key pair creation on Curve25519 based on https://github.com/dalek-cryptography/x25519-dalek/
+
+Copyright (c) 2017-2021 isis agora lovecruft. All rights reserved.
+Copyright (c) 2019-2021 DebugSteven. All rights reserved.
 
 */
 
