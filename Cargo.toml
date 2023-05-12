@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
 base64 = "0.21.0"
 rand = "0.8.5"
 rand_core = "0.6.4"
+inquire = "0.6.2"
+
 curve25519-dalek = { version = "4.0.0-rc.2", default-features = false }
 
 [patch.crates-io.curve25519-dalek]

@@ -1,14 +1,8 @@
-mod gen_keys;
+pub mod server_conf;
+pub mod gen_keys;
+pub mod peer_conf;
 
-use base64::{engine::general_purpose, Engine as _};
-use rand_core::OsRng;
 fn main() {
-    let priv_key = gen_keys::PrivKey::new(OsRng);
-    let shared_key = gen_keys::PrivKey::new(OsRng);
-    let pub_key = gen_keys::PubKey::from(&priv_key);
-
-    println!("PrivKey: {}", general_purpose::STANDARD.encode(&priv_key));
-    println!("SharedKey: {}", general_purpose::STANDARD.encode(&shared_key));
-    println!("PubKey: {}", general_purpose::STANDARD.encode(&pub_key));
-
+    let server_cfg = server_conf::ServerConf::interactive_new();
+    let _peer_cfg = peer_conf::PeerConf::interactive_new(server_cfg);
 }
