@@ -8,7 +8,6 @@ use std::{
 };
 
 pub fn save_peer_conf(peer_cfg: &PeerConf) {
-    println!("Saving {}.conf", peer_cfg.name);
     create_dir_all("./peers").unwrap();
 
     let name;
@@ -17,6 +16,8 @@ pub fn save_peer_conf(peer_cfg: &PeerConf) {
     } else {
         name = peer_cfg.name.clone();
     }
+
+    println!("Saving {}.conf", name);
 
     let mut file = OpenOptions::new()
         .read(true)
