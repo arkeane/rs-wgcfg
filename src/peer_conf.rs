@@ -67,6 +67,7 @@ impl PeerConf {
         let endpoint = CustomType::<Ipv4Addr>::new("Insert Endpoint IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
+            .with_default(Ipv4Addr::new(127,0,0,1))
             .prompt()
             .unwrap();
         let port = CustomType::<i32>::new("Insert port number")
@@ -90,6 +91,7 @@ impl PeerConf {
         let dns_primary = CustomType::<Ipv4Addr>::new("Insert primary DNS IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
+            .with_help_message("Required")
             .with_default(Ipv4Addr::new(1, 1, 1, 1))
             .prompt()
             .unwrap();
@@ -97,6 +99,7 @@ impl PeerConf {
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
             .with_default(Ipv4Addr::new(8, 8, 8, 8))
+            .with_help_message("If not needed insert same as primary")
             .prompt()
             .unwrap();
         let keepalive = CustomType::<i32>::new("Insert PersistentKeepalive time (seconds)")

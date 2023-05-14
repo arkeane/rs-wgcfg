@@ -36,20 +36,15 @@ impl ServerConf {
         }
     }
 
-    pub fn interactive_new() -> ServerConf {
+    pub fn interactive_new(interface_name: String) -> ServerConf {
         println!("--------------------------------------------------");
-        println!("Configure Server: ");
-        let interface_name = Text::new("Insert interface name")
-            .with_default("wg0")
-            .prompt()
-            .unwrap();
+        println!("Configure Server {}: ", interface_name);
         let port = CustomType::<i32>::new("Insert port number")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("please insert an integer number")
             .with_default(WG_SERVER_PORT)
             .prompt()
             .unwrap();
-        println!("--------------------------------------------------");
         ServerConf::new(interface_name, port)
     }
 }
