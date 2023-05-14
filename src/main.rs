@@ -2,6 +2,7 @@ pub mod gen_keys;
 pub mod peer_conf;
 pub mod server_conf;
 pub mod write_conf;
+pub mod ip_netmask;
 
 use inquire::*;
 use write_conf::update_server_conf;

@@ -26,7 +26,7 @@ pub fn save_peer_conf(peer_cfg: &PeerConf) {
         .open(format!("./peers/{}.conf", name))
         .unwrap();
 
-    let peer_conf = format!("[Interface]\nPrivateKey = {}\nListenPort = {}\nAddress = {}/32\nDNS = {}, {}\n\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}/0\nEndpoint = {}:{}\nPersistentKeepalive = {}\n",
+    let peer_conf = format!("[Interface]\nPrivateKey = {}\nListenPort = {}\nAddress = {}\nDNS = {}, {}\n\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}\nEndpoint = {}:{}\nPersistentKeepalive = {}\n",
         general_purpose::STANDARD.encode(&peer_cfg.priv_key),
         peer_cfg.port,
         peer_cfg.address,
@@ -64,7 +64,7 @@ pub fn update_server_conf(server_cfg: &ServerConf, peer_cfg: &PeerConf) {
         .open(format!("{}.conf", server_cfg.interface_name))
         .unwrap();
 
-    let peer_conf = format!("\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}/32\nPersistenKeepAlive = {}\n", 
+    let peer_conf = format!("\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}\nPersistenKeepAlive = {}\n", 
         general_purpose::STANDARD.encode(&peer_cfg.pub_key),
         general_purpose::STANDARD.encode(&peer_cfg.shared_key),
         peer_cfg.address,

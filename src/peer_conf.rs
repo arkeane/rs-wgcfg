@@ -2,6 +2,7 @@ static WG_SERVER_PORT: i32 = 51820;
 
 use crate::gen_keys::*;
 use crate::server_conf::*;
+use crate::ip_netmask::*;
 
 use inquire::*;
 use rand::Rng;
@@ -16,8 +17,8 @@ pub struct PeerConf {
     pub shared_key: PrivKey,
     pub dns_primary: Ipv4Addr,
     pub dns_secondary: Ipv4Addr,
-    pub allowed_ips: Ipv4Addr,
-    pub address: Ipv4Addr,
+    pub allowed_ips: IpNetmask,
+    pub address: IpNetmask,
     pub endpoint: Ipv4Addr,
     pub port: i32,
     pub keepalive: i32,
@@ -29,8 +30,8 @@ impl PeerConf {
         server_cfg: &ServerConf,
         dns_primary: Ipv4Addr,
         dns_secondary: Ipv4Addr,
-        allowed_ips: Ipv4Addr,
-        address: Ipv4Addr,
+        allowed_ips: IpNetmask,
+        address: IpNetmask,
         endpoint: Ipv4Addr,
         port: i32,
         keepalive: i32,
@@ -74,16 +75,16 @@ impl PeerConf {
             .with_default(WG_SERVER_PORT)
             .prompt()
             .unwrap();
-        let allowed_ips = CustomType::<Ipv4Addr>::new("Insert Allowed IPs")
+        let allowed_ips = CustomType::<IpNetmask>::new("Insert Allowed IPs")
             .with_formatter(&|i| format!("{}/0", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(0, 0, 0, 0))
+            .with_default(IpNetmask::new(Ipv4Addr::new(0, 0, 0, 0), 0))
             .prompt()
             .unwrap();
-        let address = CustomType::<Ipv4Addr>::new("Insert Peer Address")
+        let address = CustomType::<IpNetmask>::new("Insert Peer Address")
             .with_formatter(&|i| format!("{}/32", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(10, 0, 0, rng.gen_range(1..128)))
+            .with_default(IpNetmask::new(Ipv4Addr::new(10, 0, 0, rng.gen_range(1..128)), 32))
             .prompt()
             .unwrap();
         let dns_primary = CustomType::<Ipv4Addr>::new("Insert primary DNS IpV4 Address")
