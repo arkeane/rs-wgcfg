@@ -77,15 +77,15 @@ impl PeerConf {
             .prompt()
             .unwrap();
         let allowed_ips = CustomType::<IpNetmask>::new("Insert Allowed IPs")
-            .with_formatter(&|i| format!("{}/0", i))
+            .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
             .with_default(IpNetmask::new(Ipv4Addr::new(0, 0, 0, 0), 0))
             .prompt()
             .unwrap();
         let address = CustomType::<IpNetmask>::new("Insert Peer Address")
-            .with_formatter(&|i| format!("{}/32", i))
+            .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(IpNetmask::new(Ipv4Addr::new(10, 0, 0, rng.gen_range(1..128)), 32))
+            .with_default(IpNetmask::new(Ipv4Addr::new(10, 0, 0, rng.gen_range(2..254)), 32))
             .prompt()
             .unwrap();
         let dns_primary = CustomType::<Ipv4Addr>::new("Insert primary DNS IpV4 Address")
