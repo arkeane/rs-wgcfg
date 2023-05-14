@@ -64,7 +64,8 @@ pub fn update_server_conf(server_cfg: &ServerConf, peer_cfg: &PeerConf) {
         .open(format!("{}.conf", server_cfg.interface_name))
         .unwrap();
 
-    let peer_conf = format!("\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}\nPersistenKeepAlive = {}\n", 
+    let peer_conf = format!(
+        "\n[Peer]\nPublicKey = {}\nPresharedKey = {}\nAllowedIPs = {}\nPersistenKeepAlive = {}\n",
         general_purpose::STANDARD.encode(&peer_cfg.pub_key),
         general_purpose::STANDARD.encode(&peer_cfg.shared_key),
         peer_cfg.address,

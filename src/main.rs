@@ -1,8 +1,8 @@
 pub mod gen_keys;
+pub mod ip_netmask;
 pub mod peer_conf;
 pub mod server_conf;
 pub mod write_conf;
-pub mod ip_netmask;
 
 use inquire::*;
 use write_conf::update_server_conf;
@@ -25,29 +25,30 @@ fn main() {
             .prompt();
 
         match create {
-            Ok(true) => { 
-                server_cfg = server_conf::ServerConf::interactive_new(interface_name); 
-                write_conf::save_server_conf(&server_cfg)}
+            Ok(true) => {
+                server_cfg = server_conf::ServerConf::interactive_new(interface_name);
+                write_conf::save_server_conf(&server_cfg)
+            }
 
             Ok(false) => {
                 println!("{}.conf will not be created. Closing", interface_name);
-                return
+                return;
             }
 
             Err(_) => {
                 println!("Error. Closing");
-                return
+                return;
             }
         }
     }
 
     loop {
         let create = Confirm::new("Do you want to add a new peer?")
-        .with_default(false)
-        .prompt();
+            .with_default(false)
+            .prompt();
 
         match create {
-            Ok(true) => { 
+            Ok(true) => {
                 let peer_cfg = peer_conf::PeerConf::interactive_new(&server_cfg);
                 write_conf::save_peer_conf(&peer_cfg);
                 update_server_conf(&server_cfg, &peer_cfg);
@@ -55,14 +56,13 @@ fn main() {
 
             Ok(false) => {
                 println!("All peers created. Closing");
-                return
+                return;
             }
 
             Err(_) => {
                 println!("Error. Closing");
-                return
+                return;
             }
         }
     }
-    
 }

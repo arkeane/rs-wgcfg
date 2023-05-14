@@ -1,8 +1,8 @@
 static WG_SERVER_PORT: i32 = 51820;
 
 use crate::gen_keys::*;
-use crate::server_conf::*;
 use crate::ip_netmask::*;
+use crate::server_conf::*;
 
 use inquire::*;
 use rand::Rng;
@@ -67,7 +67,7 @@ impl PeerConf {
         let endpoint = CustomType::<Ipv4Addr>::new("Insert Endpoint IpV4 Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(Ipv4Addr::new(127,0,0,1))
+            .with_default(Ipv4Addr::new(127, 0, 0, 1))
             .prompt()
             .unwrap();
         let port = CustomType::<i32>::new("Insert port number")
@@ -85,7 +85,10 @@ impl PeerConf {
         let address = CustomType::<IpNetmask>::new("Insert Peer Address")
             .with_formatter(&|i| format!("{}", i))
             .with_error_message("Please insert a valid IP")
-            .with_default(IpNetmask::new(Ipv4Addr::new(10, 0, 0, rng.gen_range(2..254)), 32))
+            .with_default(IpNetmask::new(
+                Ipv4Addr::new(10, 0, 0, rng.gen_range(2..254)),
+                32,
+            ))
             .prompt()
             .unwrap();
         let dns_primary = CustomType::<Ipv4Addr>::new("Insert primary DNS IpV4 Address")
