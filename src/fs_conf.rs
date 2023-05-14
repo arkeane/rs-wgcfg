@@ -4,7 +4,7 @@ use base64::{engine::general_purpose, Engine as _};
 
 use std::{
     fs::{create_dir_all, File, OpenOptions},
-    io::{Seek, Write},
+    io::{Seek, Write, Read},
 };
 
 pub fn save_peer_conf(peer_cfg: &PeerConf) {
@@ -74,4 +74,15 @@ pub fn update_server_conf(server_cfg: &ServerConf, peer_cfg: &PeerConf) {
 
     file.seek(std::io::SeekFrom::End(0)).unwrap();
     file.write_all(peer_conf.as_bytes()).unwrap();
+}
+
+pub fn list_peers(server_cfg: &ServerConf){
+    println!("Peers list for {}.conf", server_cfg.interface_name);
+    let mut file = File::open(format!("{}.conf", server_cfg.interface_name)).unwrap();
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).unwrap();
+    let mut lines = contents.lines();
+
+    
+
 }
